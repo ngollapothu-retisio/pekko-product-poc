@@ -1,0 +1,1 @@
+GET     /               pekko.product.api.PingApi.ping

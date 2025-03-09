@@ -1,0 +1,5 @@
+addSbtPlugin("io.spray" % "sbt-revolver" % "0.10.0")
+addSbtPlugin("org.playframework" % "sbt-plugin" % "3.0.6")
+addSbtPlugin("io.github.davidmweber" % "flyway-sbt" % "7.4.0")
+addSbtPlugin("com.github.sbt" % "sbt-javaagent" % "0.1.8")
+addSbtPlugin("com.github.sbt" % "sbt-release" % "1.4.0")
