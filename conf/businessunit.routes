@@ -1,0 +1,5 @@
+POST       /api/v1/business-units           pekko.product.api.v1.controller.BusinessUnitController.createBusinessUnit(request:Request)
+PUT        /api/v1/business-units           pekko.product.api.v1.controller.BusinessUnitController.updateBusinessUnit(request:Request)
+PATCH      /api/v1/business-units/:id       pekko.product.api.v1.controller.BusinessUnitController.patchBusinessUnit(request:Request, id)
+GET        /api/v1/business-units/:id       pekko.product.api.v1.controller.BusinessUnitController.getBusinessUnit(request:Request, id)
+DELETE     /api/v1/business-units/:id       pekko.product.api.v1.controller.BusinessUnitController.deleteBusinessUnit(request:Request, id)

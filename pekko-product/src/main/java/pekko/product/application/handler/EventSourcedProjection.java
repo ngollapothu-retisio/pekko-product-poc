@@ -63,7 +63,7 @@ public class EventSourcedProjection<T> {
         Optional<R2dbcProjectionSettings> settings = Optional.empty();
 
         int saveOffsetAfterEnvelopes = 100;
-        Duration saveOffsetAfterDuration = Duration.ofMillis(500);
+        Duration saveOffsetAfterDuration = Duration.ofMillis(500l);
         log.info("{} init()..................", name);
         return R2dbcProjection.atLeastOnce(
                         projectionId, settings, sourceProvider, () -> handler, system)

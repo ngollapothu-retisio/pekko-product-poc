@@ -54,7 +54,7 @@ object Dependencies {
     "org.apache.pekko" %% "pekko-projection-r2dbc" % Version.PekkoProjectionR2dbcVersion,
     "org.apache.pekko" %% "pekko-projection-core" % Version.PekkoProjectionVersion,
     "org.apache.pekko" %% "pekko-projection-eventsourced" % Version.PekkoProjectionVersion,
-
+    "org.apache.pekko" %% "pekko-projection-durable-state" % Version.PekkoProjectionVersion,
     "org.postgresql" % "r2dbc-postgresql" % Version.r2dbcPostgresVersion,
 
     "ch.qos.logback"    % "logback-classic"       % Version.logbackVersion,
