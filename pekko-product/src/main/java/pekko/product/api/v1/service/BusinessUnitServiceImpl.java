@@ -13,7 +13,10 @@ import pekko.product.api.v1.request.UpdateBusinessUnitRequest;
 import pekko.product.api.v1.response.GetBusinessUnitResponse;
 import pekko.product.application.command.BusinessUnitCommand;
 import pekko.product.application.entity.BusinessUnitEntity;
+import pekko.product.application.handler.BusinessUnitStateChangeHandler;
+import pekko.product.application.handler.DurableStateProjection;
 import pekko.product.application.reply.BusinessUnitReply;
+import pekko.product.application.state.BusinessUnitState;
 
 import javax.inject.Inject;
 import java.time.Duration;
@@ -26,12 +29,14 @@ public class BusinessUnitServiceImpl implements BusinessUnitService {
     private final ClusterSharding clusterSharding;
 
     @Inject
-    public BusinessUnitServiceImpl(ActorSystem classicActorSystem){
+    public BusinessUnitServiceImpl(ActorSystem classicActorSystem, BusinessUnitStateChangeHandler businessUnitStateChangeHandler){
         org.apache.pekko.actor.typed.ActorSystem<Void> typedActorSystem = Adapter.toTyped(classicActorSystem);
         this.clusterSharding = ClusterSharding.get(typedActorSystem);
 
         BusinessUnitEntity.init(clusterSharding);
 
+        DurableStateProjection.<BusinessUnitState>init(4, typedActorSystem, BusinessUnitEntity.ENTITY_TYPE_KEY.name(), "BusinessUnits", "business-units-", businessUnitStateChangeHandler);
+        
         log.info("pekko actors registration is processed");
     }
 
