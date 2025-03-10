@@ -1,1 +1,2 @@
-GET     /               pekko.product.api.PingApi.ping
+GET     /ping                   pekko.product.api.PingApi.ping
+->      /           product.Routes

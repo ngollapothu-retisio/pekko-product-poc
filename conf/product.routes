@@ -1,0 +1,5 @@
+POST       /api/v1/products           pekko.product.api.v1.controller.ProductController.createProduct(request:Request)
+PUT        /api/v1/products           pekko.product.api.v1.controller.ProductController.updateProduct(request:Request)
+PATCH      /api/v1/products/:id       pekko.product.api.v1.controller.ProductController.patchProduct(request:Request, id)
+GET        /api/v1/products/:id       pekko.product.api.v1.controller.ProductController.getProduct(request:Request, id)
+DELETE     /api/v1/products/:id       pekko.product.api.v1.controller.ProductController.deleteProduct(request:Request, id)

@@ -1,0 +1,1 @@
+pekko-product-poc -Dconfig.resource=local3.conf

@@ -15,6 +15,7 @@ public class PekkoClusterSetup {
 
     @Inject
     public PekkoClusterSetup(ActorSystem system){
+
         log.info("PekkoClusterSetup");
         org.apache.pekko.actor.typed.ActorSystem<Void> typedActorSystem = Adapter.toTyped(system);
 
