@@ -13,6 +13,9 @@ import pekko.product.api.v1.request.UpdateProductRequest;
 import pekko.product.api.v1.response.GetProductResponse;
 import pekko.product.application.command.ProductCommand;
 import pekko.product.application.entity.ProductEntity;
+import pekko.product.application.event.ProductEvent;
+import pekko.product.application.handler.EventSourcedProjection;
+import pekko.product.application.handler.ProductEventHandler;
 import pekko.product.application.reply.ProductReply;
 
 import javax.inject.Inject;
@@ -26,11 +29,14 @@ public class ProductServiceImpl implements ProductService {
     private final ClusterSharding clusterSharding;
 
     @Inject
-    public ProductServiceImpl(ActorSystem classicActorSystem){
+    public ProductServiceImpl(ActorSystem classicActorSystem, ProductEventHandler productEventHandler){
         org.apache.pekko.actor.typed.ActorSystem<Void> typedActorSystem = Adapter.toTyped(classicActorSystem);
         this.clusterSharding = ClusterSharding.get(typedActorSystem);
 
         ProductEntity.init(clusterSharding,10,30);
+
+        EventSourcedProjection.<ProductEvent>init(4, typedActorSystem, ProductEntity.ENTITY_TYPE_KEY.name(), "Products", "products-", productEventHandler);
+
         log.info("pekko actors registration is processed");
     }
 
