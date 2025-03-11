@@ -5,6 +5,8 @@ import sbt._
 
 object Version {
   val PekkoVersion = "1.1.3"
+  val PekkoConnectorsKafka = "1.1.0"
+  val PekkoProjectionKafka = "1.1.0"
   val PekkoMgmtVersion = "1.1.0"
   val postgresVersion = "42.7.5"
   val PekkoProjectionVersion = "1.1.0"
@@ -20,8 +22,8 @@ object Version {
 
 object Dependencies {
   val dependencies = Seq(
-    "org.apache.pekko" %% "pekko-connectors-kafka" % "1.1.0",
-
+    "org.apache.pekko" %% "pekko-connectors-kafka" % Version.PekkoConnectorsKafka,
+    "org.apache.pekko" %% "pekko-projection-kafka" % Version.PekkoProjectionKafka,
     "org.apache.pekko" %% "pekko-protobuf-v3" % Version.PekkoVersion,
     "org.apache.pekko" %% "pekko-serialization-jackson" % Version.PekkoVersion,
     "org.apache.pekko" %% "pekko-stream" % Version.PekkoVersion,
