@@ -1,5 +1,5 @@
 GET   /api/v1/projections/status/:name/:key   pekko.product.api.v1.controller.ProjectionManagementController.status(name, key)
 POST  /api/v1/projections/pause/:name/:key   pekko.product.api.v1.controller.ProjectionManagementController.pause(name, key)
 POST  /api/v1/projections/resume/:name/:key   pekko.product.api.v1.controller.ProjectionManagementController.resume(name, key)
-#POST  /api/v1/projections/clear-offset/:name/:key   pekko.product.api.v1.controller.ProjectionManagementController.clearOffset(name, key)
-#POST  /api/v1/projections/update-offset/:name/:key/:sequence   pekko.product.api.v1.controller.ProjectionManagementController.updateOffset(name, key, sequence)
+POST  /api/v1/projections/clear-offset/:name/:key   pekko.product.api.v1.controller.ProjectionManagementController.clearOffset(name, key)
+POST  /api/v1/projections/update-offset/:name/:key   pekko.product.api.v1.controller.ProjectionManagementController.updateOffset(name, key)
