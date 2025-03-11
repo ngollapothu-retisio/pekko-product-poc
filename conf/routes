@@ -1,3 +1,4 @@
 GET     /ping                   pekko.product.api.PingApi.ping
 ->      /           product.Routes
 ->      /           businessunit.Routes
+->      /           projection.Routes
