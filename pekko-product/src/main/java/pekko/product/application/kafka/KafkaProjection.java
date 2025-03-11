@@ -61,11 +61,8 @@ public class KafkaProjection {
         ProjectionId projectionId = ProjectionId.of(name, "listener-"+listenerNumber);
         Optional<R2dbcProjectionSettings> settings = Optional.empty();
 
-        int saveOffsetAfterEnvelopes = 100;
-        Duration saveOffsetAfterDuration = Duration.ofMillis(500l);
         log.info("{} init()..................listenerNumber::{}", name, listenerNumber);
-        return R2dbcProjection.atLeastOnce(
-                        projectionId, settings, sourceProvider, () -> handler, system)
-                .withSaveOffset(saveOffsetAfterEnvelopes, saveOffsetAfterDuration);
+        return R2dbcProjection.exactlyOnce(
+                        projectionId, settings, sourceProvider, () -> handler, system);
     }
 }
