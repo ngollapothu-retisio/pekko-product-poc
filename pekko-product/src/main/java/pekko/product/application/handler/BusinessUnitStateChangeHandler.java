@@ -9,6 +9,7 @@ import org.apache.pekko.projection.r2dbc.javadsl.R2dbcHandler;
 import org.apache.pekko.projection.r2dbc.javadsl.R2dbcSession;
 import pekko.product.application.domain.BusinessUnit;
 import pekko.product.application.entity.BusinessUnitEntity;
+import pekko.product.application.repository.BusinessUnitRepository;
 import pekko.product.application.state.BusinessUnitState;
 import pekko.product.application.util.KafkaUtil;
 
@@ -24,14 +25,16 @@ public class BusinessUnitStateChangeHandler extends R2dbcHandler<DurableStateCha
 
     private final KafkaUtil kafkaUtil;
     private final static String TOPIC_NAME = "business-unit-events";
-
+    private final BusinessUnitRepository businessUnitRepository;
+    
     @Inject
-    public BusinessUnitStateChangeHandler(ActorSystem classicActorSystem){
+    public BusinessUnitStateChangeHandler(ActorSystem classicActorSystem, BusinessUnitRepository businessUnitRepository){
         this.kafkaUtil = new KafkaUtil(classicActorSystem);
+        this.businessUnitRepository = businessUnitRepository;
     }
 
     @Override
-    public CompletionStage<Done> process(R2dbcSession session, DurableStateChange<BusinessUnitState> change) {
+    public CompletionStage<Done> process(R2dbcSession session, DurableStateChange<BusinessUnitState> change) throws Exception {
         String persistenceId = change.persistenceId();
         String entityName = BusinessUnitEntity.ENTITY_TYPE_KEY.name();
         String entityId = persistenceId.substring((entityName+"|").length());
@@ -42,17 +45,21 @@ public class BusinessUnitStateChangeHandler extends R2dbcHandler<DurableStateCha
                 BusinessUnit businessUnit = businessUnitState.businessUnit.get();
                 if (businessUnitState instanceof BusinessUnitState.Created) {
                     log.info("Created. revision::{}, persistenceId::{}", updated.revision(), persistenceId);
-                    return kafkaUtil.send(TOPIC_NAME, businessUnit.id(), toJsonString(toCreatedEvent(entityId, businessUnit)));
+                    return kafkaUtil.send(TOPIC_NAME, businessUnit.id(), toJsonString(toCreatedEvent(entityId, businessUnit)))
+                            .thenCompose(done ->businessUnitRepository.saveBusinessUnit(businessUnit));
                 } else if (businessUnitState instanceof BusinessUnitState.Updated) {
                     log.info("Updated. revision::{}, persistenceId::{}", updated.revision(), persistenceId);
-                    return kafkaUtil.send(TOPIC_NAME, businessUnit.id(), toJsonString(toUpdatedEvent(entityId, businessUnit)));
+                    return kafkaUtil.send(TOPIC_NAME, businessUnit.id(), toJsonString(toUpdatedEvent(entityId, businessUnit)))
+                            .thenCompose(done ->businessUnitRepository.saveBusinessUnit(businessUnit));
                 } else if (businessUnitState instanceof BusinessUnitState.Patched) {
                     log.info("Patched. revision::{}, persistenceId::{}", updated.revision(), persistenceId);
-                    return kafkaUtil.send(TOPIC_NAME, businessUnit.id(), toJsonString(toPatchedEvent(entityId, businessUnit)));
+                    return kafkaUtil.send(TOPIC_NAME, businessUnit.id(), toJsonString(toPatchedEvent(entityId, businessUnit)))
+                            .thenCompose(done ->businessUnitRepository.patchBusinessUnit(businessUnit, entityId));
                 }
             } else if (businessUnitState instanceof BusinessUnitState.Deleted) {
                 log.info("Deleted. revision::{}, persistenceId::{}", updated.revision(), persistenceId);
-                return kafkaUtil.send(TOPIC_NAME, entityId, toJsonString(toDeletedEvent(entityId)));
+                return kafkaUtil.send(TOPIC_NAME, entityId, toJsonString(toDeletedEvent(entityId)))
+                        .thenCompose(done ->businessUnitRepository.deleteBusinessUnit(entityId));
             }
         } else {
             log.info("Change ignored, class::{}, persistenceId::{}", change.getClass(), change.persistenceId());

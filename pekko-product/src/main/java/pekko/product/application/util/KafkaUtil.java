@@ -43,6 +43,7 @@ public class KafkaUtil  {
                             } else {
                                 log.error("KafkaError::000 while sending message to Topic::{}, key::{}, value::{}",
                                         topic, key, value, exception);
+                                throw new RuntimeException(exception);
                             }
                             return Done.getInstance();
                         }
